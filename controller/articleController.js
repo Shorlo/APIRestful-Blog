@@ -143,4 +143,36 @@ const listArticles = (resquest, response) =>
     });
 }
 
-module.exports = { test, book, createArticle, listArticles };
+const listArticlesByDate = (resquest, response) =>
+{
+    // With sort and date: -1 we order the list by the recent articles first
+
+    let query = Article.find({});
+    
+    // With limit we only get the first 3 register in the database
+    //query.limit(3);
+    // We will limit the query by first 3 items if we recieve the last parameter in the url
+    if(resquest.params.last)
+    {
+        query.limit(3);
+    }
+
+    query.sort({date: -1}).then((articles) =>
+    {
+        return response.status(200).send
+        ({
+            status: "Success",
+            articles: articles
+        });
+    }).catch((error) =>
+    {
+        return response.status(404).json
+        ({
+            status: "error",
+            error: error,
+            message: "Articles not found..."
+        });
+    });
+}
+
+module.exports = { test, book, createArticle, listArticles, listArticlesByDate };
