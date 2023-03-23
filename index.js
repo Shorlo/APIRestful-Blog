@@ -22,14 +22,17 @@ app.use(express.json());
 app.get("/", (request, response) =>
 {
     console.log("Ejecuting test endpoint...");
-    return response.status(200).send(`
+    return response.status(200).send
+    (`
         <h1>APIRestful with NodeJS</h1>
     `);
 });
+
 app.get("/test", (request, response) =>
 {
     console.log("Ejecuting test endpoint...");
-    return response.status(200).json(
+    return response.status(200).json
+    (
         [
             {
                 title: "APIRestful NodeJS",
