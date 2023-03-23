@@ -13,5 +13,6 @@ router.get("/listArticles", ArticleController.listArticles);
 router.get("/listArticlesByDate/:last?", ArticleController.listArticlesByDate);
 router.get("/getArticle/:id", ArticleController.getArticle);
 router.delete("/getArticle/:id", ArticleController.deleteArticle);
+router.put("/getArticle/:id", ArticleController.editArticle);
 
 module.exports = router;

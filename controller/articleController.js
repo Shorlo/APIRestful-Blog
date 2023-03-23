@@ -223,8 +223,10 @@ const getArticle = (request, response) =>
 
 const deleteArticle = (request, response) =>
 {
+    // Get id of article what we want to delete
     let idArticle = request.params.id;
 
+    // Find the article and delete from the database
     Article.findOneAndDelete({_id: idArticle}).then((article) =>
     {
         return response.status(200).json
@@ -244,6 +246,55 @@ const deleteArticle = (request, response) =>
     });
 }
 
+const editArticle = (request, response) =>
+{
+    // Get id of the article to edit
+    let idArticle = request.params.id;
+
+    // Get data from the body
+    let params = request.body;
+
+    // Validate data
+    try
+    {
+        let validate_title = !validator.isEmpty(params.title) && validator.isLength(params.title, {min: 5, max: 25});
+        let validate_content = !validator.isEmpty(params.content);
+
+        if(!validate_title || !validate_content)
+        {
+            throw new Error("Info is not validate!!");
+        }
+    }
+    catch(error)
+    {
+        return response.status(400).json
+        ({
+            status: "error",
+            message: "Missing data..."
+        });
+    }
+    
+    // Find, update article and return response
+    Article.findOneAndUpdate({_id: idArticle}, params, {new: true}).then((articleUpdate) =>
+    {
+        return response.status(200).json
+        ({
+            status: "Success",
+            article: articleUpdate
+        });
+    }).catch((error) =>
+    {
+        return response.status(400).json
+        ({
+            status: "error",
+            error: error,
+            message: "Error updating article..."
+        });
+    });;
+
+
+}
+
 module.exports =
 {
     test,
@@ -252,5 +303,6 @@ module.exports =
     listArticles,
     listArticlesByDate,
     getArticle,
-    deleteArticle
+    deleteArticle,
+    editArticle
 };
