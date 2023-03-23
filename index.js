@@ -18,7 +18,7 @@ app.use(cors());
 // Convert body to ObjectJS
 app.use(express.json());
 
-// Routes
+// Test Routes
 app.get("/", (request, response) =>
 {
     console.log("Ejecuting test endpoint...");
@@ -45,6 +45,13 @@ app.get("/test", (request, response) =>
         ]
     );
 });
+
+// Routes
+const articleRoute = require('./routes/articleRoute');
+
+// Load routes
+app.use("/api", articleRoute);
+
 
 // Create routes
 app.listen(PORT, () =>
