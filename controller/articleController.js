@@ -91,14 +91,61 @@ const createArticle = (request, response) =>
         });
     }).catch((error) =>
     {
-        console.error(error);
         return response.status(400).json
         ({
             status: "error",
+            error: error,
             message: "Article was not saved..."
         });
     });
+}
+
+
+
+const listArticles = (resquest, response) =>
+{
+
+    // List articles from the database.
+    //MongooseError: Query.prototype.exec() no longer accepts a callback
+    /*
+    let query = Article.find({}).exec((error, articles) => 
+    {
+        if(error || !articles)
+        {
+            return response.status(404).json
+            ({
+                status: "error",
+                message: "Articles not found..."
+            });
+        }
+
+        return response.status(200).send
+        ({
+            status: "Success",
+            articles
+        });
+    });
+    */
+
+    // New way to list items in database using Mongoose without callbacks
+    let query = Article.find({}).then((articles) =>
+    {
+        return response.status(200).send
+        ({
+            status: "Success",
+            articles: articles
+        });
+    }).catch((error) =>
+    {
+        return response.status(404).json
+        ({
+            status: "error",
+            error: error,
+            message: "Articles not found..."
+        });
+    });
+    
 
 }
 
-module.exports = { test, book, createArticle };
+module.exports = { test, book, createArticle, listArticles };

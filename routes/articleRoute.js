@@ -8,5 +8,6 @@ router.get("/book", ArticleController.book);
 
 // Utils endpoints routes
 router.post("/createArticle", ArticleController.createArticle);
+router.get("/listArticles", ArticleController.listArticles);
 
 module.exports = router;
