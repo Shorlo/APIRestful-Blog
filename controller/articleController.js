@@ -136,7 +136,7 @@ const listArticles = (resquest, response) =>
     {
         return response.status(404).json
         ({
-            status: "error",
+            status: "Error",
             error: error,
             message: "Articles not found..."
         });
@@ -167,11 +167,59 @@ const listArticlesByDate = (resquest, response) =>
     {
         return response.status(404).json
         ({
-            status: "error",
+            status: "Error",
             error: error,
             message: "Articles not found..."
         });
     });
 }
 
-module.exports = { test, book, createArticle, listArticles, listArticlesByDate };
+const getArticle = (request, response) =>
+{
+    // Get id of url
+    let id = request.params.id;
+
+    // Find article
+    // MongooseError: Model.findById() no longer accepts a callback
+    /*
+    Article.findById(id, (error, article) =>
+    {
+        // If not exists -> error
+        if(error || !article)
+        {
+            return response.status(404).json
+            ({
+                status: "Error",
+                message: "Article not found..."
+            });
+        }
+        // Return response
+        return response.status(200).json
+        ({
+            status: "Success",
+            article: article
+        });
+    });
+    */
+    
+    // New way to get item by id in database using Mongoose without callbacks
+    Article.findById(id).then((article) =>
+    {
+        return response.status(200).json
+        ({
+            status: "Success",
+            article: article
+        });
+    }).catch((error) =>
+    {
+        return response.status(404).json
+        ({
+            status: "Error",
+            error: error,
+            message: "Articles not found..."
+        });
+    });;
+    
+}
+
+module.exports = { test, book, createArticle, listArticles, listArticlesByDate, getArticle };
