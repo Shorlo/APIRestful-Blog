@@ -216,10 +216,41 @@ const getArticle = (request, response) =>
         ({
             status: "Error",
             error: error,
-            message: "Articles not found..."
+            message: "Article not found..."
         });
-    });;
-    
+    });
 }
 
-module.exports = { test, book, createArticle, listArticles, listArticlesByDate, getArticle };
+const deleteArticle = (request, response) =>
+{
+    let idArticle = request.params.id;
+
+    Article.findOneAndDelete({_id: idArticle}).then((article) =>
+    {
+        return response.status(200).json
+        ({
+            status: "Success",
+            article: article,
+            message: "Article was deleted..."
+        });
+    }).catch((error) =>
+    {
+        return response.status(500).json
+        ({
+            status: "Error",
+            error: error,
+            message: "Article not found..."
+        });
+    });
+}
+
+module.exports =
+{
+    test,
+    book,
+    createArticle,
+    listArticles,
+    listArticlesByDate,
+    getArticle,
+    deleteArticle
+};

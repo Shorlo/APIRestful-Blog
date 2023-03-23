@@ -11,7 +11,7 @@ router.post("/createArticle", ArticleController.createArticle);
 router.get("/listArticles", ArticleController.listArticles);
 // Passing opcional parameter in the url. Without the "?" will be a required parameter
 router.get("/listArticlesByDate/:last?", ArticleController.listArticlesByDate);
-router.get("/getArticle/:id?", ArticleController.getArticle);
-
+router.get("/getArticle/:id", ArticleController.getArticle);
+router.delete("/getArticle/:id", ArticleController.deleteArticle);
 
 module.exports = router;
