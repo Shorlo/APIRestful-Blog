@@ -22,7 +22,22 @@ const book = (request, response) =>
             }
         ]
     );
-};
+}
 
+const createArticle = (request, response) =>
+{
+    // Get data to save by post
 
-module.exports = { test, book };
+    // Validate data
+
+    // Assign values to the model object( manual or automatic )
+
+    // Save the item in database
+
+    return response.status(200).json
+    ({
+        message: "Save action"
+    });
+}
+
+module.exports = { test, book, createArticle};
