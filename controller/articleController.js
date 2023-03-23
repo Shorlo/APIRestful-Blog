@@ -80,7 +80,7 @@ const createArticle = (request, response) =>
     });
     */
 
-    // New way to save intem in database using Mongoose without callbacks
+    // New way to save item in database using Mongoose without callbacks
     article.save().then((articleSaved) =>
     {
         return response.status(200).json

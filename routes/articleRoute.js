@@ -6,7 +6,7 @@ const ArticleController = require('../controller/articleController');
 router.get("/test-route", ArticleController.test);
 router.get("/book", ArticleController.book);
 
-// Utils routes
+// Utils endpoints routes
 router.post("/createArticle", ArticleController.createArticle);
 
 module.exports = router;
