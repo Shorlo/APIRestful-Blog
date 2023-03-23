@@ -145,8 +145,6 @@ const listArticles = (resquest, response) =>
 
 const listArticlesByDate = (resquest, response) =>
 {
-    // With sort and date: -1 we order the list by the recent articles first
-
     let query = Article.find({});
     
     // With limit we only get the first 3 register in the database
@@ -157,6 +155,7 @@ const listArticlesByDate = (resquest, response) =>
         query.limit(3);
     }
 
+    // With sort and date: -1 we order the list by the recent articles first
     query.sort({date: -1}).then((articles) =>
     {
         return response.status(200).send
