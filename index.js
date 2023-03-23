@@ -16,7 +16,8 @@ const PORT = 3900;
 app.use(cors());
 
 // Convert body to ObjectJS
-app.use(express.json());
+app.use(express.json()); // get data with content-type app/json
+app.use(express.urlencoded({extended: true})); // get data with form-urlencoded
 
 // Test Routes
 app.get("/", (request, response) =>
