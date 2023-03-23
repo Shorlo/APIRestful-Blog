@@ -100,11 +100,8 @@ const createArticle = (request, response) =>
     });
 }
 
-
-
 const listArticles = (resquest, response) =>
 {
-
     // List articles from the database.
     //MongooseError: Query.prototype.exec() no longer accepts a callback
     /*
@@ -144,8 +141,6 @@ const listArticles = (resquest, response) =>
             message: "Articles not found..."
         });
     });
-    
-
 }
 
 module.exports = { test, book, createArticle, listArticles };
