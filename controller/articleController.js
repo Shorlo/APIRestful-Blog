@@ -314,7 +314,7 @@ const search = (request, response) =>
     ({
         "$or": 
         [
-            {"title": {"$regex": search, "$options": "i"}},
+            {"title": {"$regex": search, "$options": "i"}}, // option -> i (means the field includes the search)
             {"contect": {"$regex": search, "$options": "i"}}
         ]
     });
