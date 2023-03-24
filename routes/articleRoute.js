@@ -35,4 +35,7 @@ router.post("/upload-image/:id", uploads.single("file"), ArticleController.uploa
 // Get files
 router.get("/getImage/:file", ArticleController.getImage);
 
+// Search
+router.get("/search/:search", ArticleController.search);
+
 module.exports = router;

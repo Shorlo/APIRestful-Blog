@@ -305,6 +305,50 @@ const getImage = (request, response) =>
     });
 }
 
+const search = (request, response) =>
+{
+    // Get string to find
+    let search = request.params.search;
+    // Find OR
+    let query = Article.find
+    ({
+        "$or": 
+        [
+            {"title": {"$regex": search, "$options": "i"}},
+            {"contect": {"$regex": search, "$options": "i"}}
+        ]
+    });
+
+    // Order and return response
+    query.sort({date: -1}).then((articles) =>
+    {
+        if(articles.length <= 0)
+        {
+            return response.status(404).json
+        ({
+            status: "Error",
+            message: "Articles not found..."
+        });
+        }
+        else
+        {
+            return response.status(200).send
+            ({
+                status: "Success",
+                articles: articles
+            });
+        } 
+    }).catch((error) =>
+    {
+        return response.status(404).json
+        ({
+            status: "Error",
+            error: error,
+            message: "Articles not found..."
+        });
+    });
+}
+
 module.exports =
 {
     test,
@@ -316,5 +360,6 @@ module.exports =
     deleteArticle,
     editArticle,
     uploadImages,
-    getImage
+    getImage,
+    search
 };
