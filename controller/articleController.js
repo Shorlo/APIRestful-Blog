@@ -1,5 +1,10 @@
+const { response } = require('express');
 const fs = require('fs');
+const path = require('path');
+const { request } = require('http');
+const { resolve } = require('path');
 const { validateArticle } = require('../helpers/validate');
+const { exists } = require('../model/Article');
 const Article = require('../model/Article');
 
 // Test
@@ -215,21 +220,21 @@ const editArticle = (request, response) =>
             error: error,
             message: "Error updating article..."
         });
-    });;
+    });
 }
 
-const upload =  (request, response) =>
+const uploadImages =  (request, response) =>
 {
     //Config multer for upload files in articleRoute.js
-   // Get the file to upload and check if there is a file to upload
-   if(!request.file && !request.files)
-   {
+    // Get the file to upload and check if there is a file to upload
+    if(!request.file && !request.files)
+    {
         return response.status(404).json
         ({
             status: "Error",
             message: "There is no file to upload..."
         });
-   }
+    }
 
     // Get file name
     let fileName = request.file.originalname;
@@ -245,20 +250,59 @@ const upload =  (request, response) =>
             return response.status(400).json
             ({
                 status: "Error",
-            error: error,
-            message: "The file is not a image..."
+                error: error,
+                message: "The file is not a image..."
             });
         });
     }
     else
     {
         // OK -> Update the article
-        return response.status(200).json
-        ({
-            status: "Success",
-            files: request.file
+        // Get id of the article to edit
+        let idArticle = request.params.id;
+        
+        // Find, update article and return response
+        Article.findOneAndUpdate({_id: idArticle}, {image: request.file.filename}, {new: true}).then((articleUpdate) =>
+        {
+            return response.status(200).json
+            ({
+                status: "Success",
+                article: articleUpdate,
+                file: request.file
+            });
+        }).catch((error) =>
+        {
+            return response.status(400).json
+            ({
+                status: "error",
+                error: error,
+                message: "Error updating article..."
+            });
         });
     }
+}
+
+const getImage = (request, response) =>
+{
+    let file = request.params.file;
+    let pathFile = "./images/articles/"+file;
+
+    fs.stat(pathFile, (error, exists) =>
+    {
+        if(exists)
+        {
+            return response.sendFile(path.resolve(pathFile));
+        }
+        else
+        {
+            return response.status(404).json
+            ({
+                status: "Error",
+                message: "Image doesn't exist...",
+                error: error
+            });
+        }
+    });
 }
 
 module.exports =
@@ -271,5 +315,6 @@ module.exports =
     getArticle,
     deleteArticle,
     editArticle,
-    upload
+    uploadImages,
+    getImage
 };

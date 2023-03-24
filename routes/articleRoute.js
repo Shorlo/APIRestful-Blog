@@ -12,7 +12,7 @@ const storage = multer.diskStorage
     },
     filename: function(request, file, cb)
     {
-        cb(null, `article ${Date.now()} ${file.originalname}`);
+        cb(null, `article-${Date.now()}-${file.originalname}`);
     }
 });
 const uploads = multer({storage: storage});
@@ -29,7 +29,10 @@ router.get("/listArticlesByDate/:last?", ArticleController.listArticlesByDate);
 router.get("/getArticle/:id", ArticleController.getArticle);
 router.delete("/getArticle/:id", ArticleController.deleteArticle);
 router.put("/getArticle/:id", ArticleController.editArticle);
-// Sending files
-router.post("/upload-image/:id", uploads.single("file"), ArticleController.upload);
+// Upload files
+router.post("/upload-image/:id", uploads.single("file"), ArticleController.uploadImages);
+
+// Get files
+router.get("/getImage/:file", ArticleController.getImage);
 
 module.exports = router;
