@@ -1,4 +1,4 @@
-const validator = require('validator');
+const { validateArticle } = require('../helpers/validate');
 const Article = require('../model/Article');
 
 // Test
@@ -37,15 +37,10 @@ const createArticle = (request, response) =>
     // Validate data
     try
     {
-        let validate_title = !validator.isEmpty(params.title) && validator.isLength(params.title, {min: 5, max: 25});
-        let validate_content = !validator.isEmpty(params.content);
-
-        if(!validate_title || !validate_content)
-        {
-            throw new Error("Info is not validate!!");
-        }
+        validateArticle(params);
     }
-    catch(error)
+    catch
+    (error)
     {
         return response.status(400).json
         ({
@@ -53,33 +48,11 @@ const createArticle = (request, response) =>
             message: "Missing data..."
         });
     }
-
+    
     // Create and assign values to the model object( manual or automatic )
     const article = new Article(params);
 
     // Save the item in database
-    // MongooseError Model.prototype.save() no longer accepts a callback
-    /*
-    article.save((error, articleSaved) => 
-    {
-        if(error || !articleSaved)
-        {
-            return response.status(400).json
-            ({
-                status: "error",
-                message: "Article was not saved..."
-            });
-        }
-        
-        return response.status(200).json
-        ({
-            status: "Success",
-            article: articleSaved,
-            message: "Article was saved successfully!!"
-        });
-    });
-    */
-
     // New way to save item in database using Mongoose without callbacks
     article.save().then((articleSaved) =>
     {
@@ -103,27 +76,6 @@ const createArticle = (request, response) =>
 const listArticles = (resquest, response) =>
 {
     // List articles from the database.
-    //MongooseError: Query.prototype.exec() no longer accepts a callback
-    /*
-    let query = Article.find({}).exec((error, articles) => 
-    {
-        if(error || !articles)
-        {
-            return response.status(404).json
-            ({
-                status: "error",
-                message: "Articles not found..."
-            });
-        }
-
-        return response.status(200).send
-        ({
-            status: "Success",
-            articles
-        });
-    });
-    */
-
     // New way to list items in database using Mongoose without callbacks
     let query = Article.find({}).then((articles) =>
     {
@@ -180,28 +132,6 @@ const getArticle = (request, response) =>
     let id = request.params.id;
 
     // Find article
-    // MongooseError: Model.findById() no longer accepts a callback
-    /*
-    Article.findById(id, (error, article) =>
-    {
-        // If not exists -> error
-        if(error || !article)
-        {
-            return response.status(404).json
-            ({
-                status: "Error",
-                message: "Article not found..."
-            });
-        }
-        // Return response
-        return response.status(200).json
-        ({
-            status: "Success",
-            article: article
-        });
-    });
-    */
-    
     // New way to get item by id in database using Mongoose without callbacks
     Article.findById(id).then((article) =>
     {
@@ -254,25 +184,19 @@ const editArticle = (request, response) =>
     // Get data from the body
     let params = request.body;
 
-    // Validate data
-    try
-    {
-        let validate_title = !validator.isEmpty(params.title) && validator.isLength(params.title, {min: 5, max: 25});
-        let validate_content = !validator.isEmpty(params.content);
-
-        if(!validate_title || !validate_content)
-        {
-            throw new Error("Info is not validate!!");
-        }
-    }
-    catch(error)
-    {
-        return response.status(400).json
-        ({
-            status: "error",
-            message: "Missing data..."
-        });
-    }
+     // Validate data
+     try
+     {
+         validateArticle(params);
+     }
+     catch(error)
+     {
+         return response.status(400).json
+         ({
+             status: "error",
+             message: "Missing data..."
+         });
+     }
     
     // Find, update article and return response
     Article.findOneAndUpdate({_id: idArticle}, params, {new: true}).then((articleUpdate) =>
@@ -291,8 +215,6 @@ const editArticle = (request, response) =>
             message: "Error updating article..."
         });
     });;
-
-
 }
 
 module.exports =
