@@ -7,34 +7,7 @@ const { validateArticle } = require('../helpers/validate');
 const { exists } = require('../model/Article');
 const Article = require('../model/Article');
 
-// Test
-const test = (request, response) =>
-{
-    return response.status(200).json
-    ({
-        message: "testing article controller"
-    });
-}
-
-const book = (request, response) =>
-{
-    console.log("Ejecuting test endpoint...");
-    return response.status(200).json
-    (
-        [
-            {
-                title: "APIRestful NodeJS",
-                author: "Javier Sainz de Baranda",
-            },
-            {
-                title: "Fundaments of Object-C",
-                author: "Javier Sainz de Baranda",
-            }
-        ]
-    );
-}
-
-// Endpoint
+// Endpoints
 const createArticle = (request, response) =>
 {
     // Get data to save by post
@@ -351,8 +324,6 @@ const search = (request, response) =>
 
 module.exports =
 {
-    test,
-    book,
     createArticle,
     listArticles,
     listArticlesByDate,

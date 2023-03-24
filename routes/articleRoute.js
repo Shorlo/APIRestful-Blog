@@ -18,17 +18,16 @@ const storage = multer.diskStorage
 const uploads = multer({storage: storage});
 
 // Routes
-router.get("/test-route", ArticleController.test);
-router.get("/book", ArticleController.book);
-
 // Utils endpoints routes
 router.post("/createArticle", ArticleController.createArticle);
 router.get("/listArticles", ArticleController.listArticles);
+
 // Passing opcional parameter in the url. Without the "?" will be a required parameter
 router.get("/listArticlesByDate/:last?", ArticleController.listArticlesByDate);
 router.get("/getArticle/:id", ArticleController.getArticle);
 router.delete("/getArticle/:id", ArticleController.deleteArticle);
 router.put("/getArticle/:id", ArticleController.editArticle);
+
 // Upload files
 router.post("/upload-image/:id", uploads.single("file"), ArticleController.uploadImages);
 
