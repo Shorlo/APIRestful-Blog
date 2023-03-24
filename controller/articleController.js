@@ -1,3 +1,4 @@
+const fs = require('fs');
 const { validateArticle } = require('../helpers/validate');
 const Article = require('../model/Article');
 
@@ -193,7 +194,7 @@ const editArticle = (request, response) =>
      {
          return response.status(400).json
          ({
-             status: "error",
+             status: "Error",
              message: "Missing data..."
          });
      }
@@ -217,6 +218,49 @@ const editArticle = (request, response) =>
     });;
 }
 
+const upload =  (request, response) =>
+{
+    //Config multer for upload files in articleRoute.js
+   // Get the file to upload and check if there is a file to upload
+   if(!request.file && !request.files)
+   {
+        return response.status(404).json
+        ({
+            status: "Error",
+            message: "There is no file to upload..."
+        });
+   }
+
+    // Get file name
+    let fileName = request.file.originalname;
+
+    // Get file extension
+    let extensionFile  = fileName.split('.')[1];
+    // Check correct extension
+    if(extensionFile != 'png' && extensionFile != 'jpeg' && extensionFile != 'jpg' && extensionFile != 'gif' && extensionFile != 'PNG' && extensionFile != 'JPEG' && extensionFile != 'JPG' && extensionFile != 'GIF')
+    {
+        // Delete file and return response.
+        fs.unlink(request.file.path, (error) =>
+        {
+            return response.status(400).json
+            ({
+                status: "Error",
+            error: error,
+            message: "The file is not a image..."
+            });
+        });
+    }
+    else
+    {
+        // OK -> Update the article
+        return response.status(200).json
+        ({
+            status: "Success",
+            files: request.file
+        });
+    }
+}
+
 module.exports =
 {
     test,
@@ -226,5 +270,6 @@ module.exports =
     listArticlesByDate,
     getArticle,
     deleteArticle,
-    editArticle
+    editArticle,
+    upload
 };
