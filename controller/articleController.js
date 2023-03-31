@@ -51,7 +51,7 @@ const createArticle = (request, response) =>
             message: "Missing data..."
         });
     }
-    
+
     // Create and assign values to the model object( manual or automatic )
     const article = new Article(params);
 
@@ -101,7 +101,7 @@ const listArticles = (resquest, response) =>
 const listArticlesByDate = (resquest, response) =>
 {
     let query = Article.find({});
-    
+
     // With limit we only get the first 3 register in the database
     //query.limit(3);
     // We will limit the query by first 3 items if we recieve the last parameter in the url
@@ -200,7 +200,7 @@ const editArticle = (request, response) =>
              message: "Missing data..."
          });
      }
-    
+
     // Find, update article and return response
     Article.findOneAndUpdate({_id: idArticle}, params, {new: true}).then((articleUpdate) =>
     {
@@ -242,7 +242,7 @@ const uploadImages =  (request, response) =>
     if(extensionFile != 'png' && extensionFile != 'jpeg' && extensionFile != 'jpg' && extensionFile != 'gif' && extensionFile != 'PNG' && extensionFile != 'JPEG' && extensionFile != 'JPG' && extensionFile != 'GIF')
     {
         // Delete file and return response.
-        fs.unlink(request.file.path, (error) =>
+        fs.unlinkSync(request.file.path, (error) =>
         {
             return response.status(400).json
             ({
@@ -257,7 +257,7 @@ const uploadImages =  (request, response) =>
         // OK -> Update the article
         // Get id of the article to edit
         let idArticle = request.params.id;
-        
+
         // Find, update article and return response
         Article.findOneAndUpdate({_id: idArticle}, {image: request.file.filename}, {new: true}).then((articleUpdate) =>
         {
@@ -309,7 +309,7 @@ const search = (request, response) =>
     // Find OR
     let query = Article.find
     ({
-        "$or": 
+        "$or":
         [
             {"title": {"$regex": search, "$options": "i"}}, // option -> i (means the field includes the search)
             {"contect": {"$regex": search, "$options": "i"}}
@@ -334,7 +334,7 @@ const search = (request, response) =>
                 status: "Success",
                 articles: articles
             });
-        } 
+        }
     }).catch((error) =>
     {
         return response.status(404).json
